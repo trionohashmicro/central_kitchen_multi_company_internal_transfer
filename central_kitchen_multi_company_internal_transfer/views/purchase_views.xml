@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+	<data>
+		<record id="inter_company_transfer_ept_purchase_form_view1" model="ir.ui.view">
+			<field name="name">inter.company.transfer.ept.purchase.view.form</field>
+			<field name="model">purchase.order</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="arch" type="xml">
+				<data>
+					<field name="partner_ref" position="after">
+						<field name="central_kitchen" readonly="True" invisible="not context.get('show_central_kitchen', False)"/>
+					</field>
+				</data>
+			</field>
+		</record>
+
+        <record id="purchase_form_action_kitchen" model="ir.actions.act_window">
+            <field name="name">Kitchen Orders</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">purchase.order</field>
+            <field name="view_mode">tree,kanban,form,pivot,graph,calendar</field>
+            <field name="context">{'search_default_todo':1, 'show_purchase': True, 'show_central_kitchen': True}</field>
+            <field name="domain">[('state','not in',('draft','sent', 'confirmed')), ('central_kitchen', '=', True)]</field>
+            <field name="search_view_id" ref="purchase.view_purchase_order_filter"/>
+            <field name="help" type="html">
+              <p class="oe_view_nocontent_create">
+                Click to create a quotation that will be converted into a purchase order.
+              </p><p>
+                Use this menu to search within your purchase orders by
+                references, vendor, products, etc. For each purchase order,
+                you can track the related discussion with the vendor, control
+                the products received and control the vendor bills.
+              </p>
+            </field>
+        </record>
+
+		<menuitem id="sub_menu_central_kitchen_create_kitchen_order" name="Create Kitchen Order"  action="purchase_form_action_kitchen"
+				parent="central_kitchen.menu_root_central_kitchen" sequence="1"/>
+
+	</data>
+</odoo>
+       
